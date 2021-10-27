@@ -1,3 +1,5 @@
+"use strict";
+
 const _data = {
   gameOn: false,
   timeout: undefined,
@@ -12,7 +14,7 @@ const _data = {
 
 const _gui = {
   counter: document.querySelector(".gui__counter"),
-  switch: document.querySelector(".gui__btn-switch"),
+  switch: document.querySelector(".gui__btn--switch"),
   led: document.querySelector(".gui__led"),
   strict: document.querySelector(".gui__btn--strict"),
   start: document.querySelector(".gui__btn--start"),
@@ -31,9 +33,26 @@ _soundUrls.forEach((sndPath) => {
   _data.sounds.push(audio);
 });
 
-_gui.switch.addEventListener("click", () => {});
+_gui.switch.addEventListener("click", () => {
+  _data.gameOn = _gui.switch.classList.toggle("gui__btn--switch--on");
+  _gui.counter.classList.toggle("gui__counter--on");
+  _gui.counter.innerHTML = "--";
 
-_gui.strict.addEventListener("click", () => {});
+  _data.strict = false;
+  _data.playerCanPlay = false;
+  _data.score = 0;
+  _data.gameSequence = [];
+  _data.playerSequence = [];
+
+  disablePads();
+  _gui.led.classList.remove("gui__led--active");
+});
+
+_gui.strict.addEventListener("click", () => {
+  if (!_data.gameOn) return;
+
+  _data.strict = _gui.led.classList.toggle("gui__led--active");
+});
 
 _gui.start.addEventListener("click", () => {});
 
@@ -59,4 +78,8 @@ const resetOrPlayAgain = () => {};
 
 const changePadCursor = (cursorType) => {};
 
-const disablePads = () => {};
+const disablePads = () => {
+  _gui.pads.forEach((pad) => {
+    pad.classList.remove("game__pad--active");
+  });
+};
