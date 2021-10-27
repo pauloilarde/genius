@@ -54,23 +54,62 @@ _gui.strict.addEventListener("click", () => {
   _data.strict = _gui.led.classList.toggle("gui__led--active");
 });
 
-_gui.start.addEventListener("click", () => {});
+_gui.start.addEventListener("click", () => {
+  startGame();
+});
 
 const padListener = (e) => {};
 
-_gui.pads.forEach((pad) => {
-  pad.addEventListener("click", padListener);
-});
+_gui.pads.forEach((pad) => pad.addEventListener("click", padListener));
 
-const startGame = () => {};
+const startGame = () => {
+  blink("--", () => {
+    newColor();
+  });
+};
 
-const setScore = () => {};
+const setScore = () => {
+  const score = _data.score.toString();
+  console.log(score);
+  const display = "00".substring(0, 2 - score.length) + score;
+  console.log(display);
+  _gui.counter.innerHTML = display;
+};
 
-const newColor = () => {};
+const newColor = () => {
+  _data.gameSequence.push(Math.floor(Math.random() * 4));
+  _data.score++;
+  setScore();
+};
 
 const playSequence = () => {};
 
-const blink = (text, callback) => {};
+const blink = (text, callback) => {
+  let counter = 0,
+    on = true;
+
+  _gui.counter.innerHTML = text;
+
+  const interval = setInterval(() => {
+    if (!_data.gameOn) {
+      clearInterval(interval);
+      _gui.counter.classList.remove("gui__counter--on");
+      return;
+    }
+    if (on) {
+      _gui.counter.classList.remove("gui__counter--on");
+    } else {
+      _gui.counter.classList.add("gui__counter--on");
+
+      if (++counter === 3) {
+        clearInterval(interval);
+        callback();
+      }
+    }
+
+    on = !on;
+  }, 250);
+};
 
 const waitForPlayerClick = () => {};
 
